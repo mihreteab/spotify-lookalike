@@ -28,7 +28,9 @@ export default function TrackOfTheWeek(
 <div className="flex flex-col border-2 border-customGray p-3.5 gap-12 rounded-3xl">
               {data?.map(item => {
                 return (
-                    <div className="flex justify-between items-center">
+                    <div
+                    key={item.id}
+                    className="flex justify-between items-center">
                     <div className="flex gap-5">
                       <Image
                         src={item.poster_url}

@@ -97,7 +97,9 @@ export default function MusicList({ setCurrentPlaying }: MusicPlaylistProps) {
       <div className="flex gap-4 overflow-x-auto">
         {data?.map((music) => {
           return (
-            <MusicCard setCurrentPlaying={setCurrentPlaying} music={music} />
+            <MusicCard
+            key={music.id}
+            setCurrentPlaying={setCurrentPlaying} music={music} />
           );
         })}
       </div>
