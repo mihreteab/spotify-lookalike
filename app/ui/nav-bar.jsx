@@ -14,9 +14,9 @@ export default function NavBar () {
     <>
       <Bars4Icon className='h-6 w-6 lg:hidden' onClick={toggleNav} />
       <div
-        className={`bg-[#000] absolute top-0 bottom-0 right-0 left-0 p-5 md:hidden ${
+        className={`bg-[#000] absolute top-0 bottom-0 right-0 left-0 p-5 z-10 ${
           open ? 'block' : 'hidden'
-        }`}
+        } lg:hidden`}
       >
         <div className='flex justify-end'>
           <XMarkIcon className='w-10 h-10' onClick={toggleNav} />

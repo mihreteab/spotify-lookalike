@@ -20,7 +20,7 @@ function MusicCard({
   music: MusicPlaylist;
 }) {
   return (
-    <div>
+    <div className="relative">
       <div className="bg-gradient-to-r from-cyan-500 to-blue-500">
         <Image
           src={music.poster_url} // Path to your image
@@ -98,8 +98,8 @@ export default function MusicList({ setCurrentPlaying }: MusicPlaylistProps) {
         {data?.map((music) => {
           return (
             <MusicCard
-            key={music.id}
-            setCurrentPlaying={setCurrentPlaying} music={music} />
+              key={music.id}
+              setCurrentPlaying={setCurrentPlaying} music={music} />
           );
         })}
       </div>

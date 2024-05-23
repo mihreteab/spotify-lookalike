@@ -6,6 +6,7 @@ import MostListendList from "./most-listened-list";
 import TrackOfTheWeek from "./track-of-the-week";
 import { useState } from "react";
 import AudioPlayer, { MusicType } from "./audio-player";
+import NavBar from '@/app/ui/nav-bar'
 
 export default function SpotifyHomePage() {
   const [currentPlaying, setCurrentPlaying] = useState<{
@@ -54,6 +55,7 @@ export default function SpotifyHomePage() {
             />
           </div>
         </div>
+        <NavBar />
       </div>
       <div className='ml-6.5'>
         <p className="py-6.5">PlayList For You</p>
