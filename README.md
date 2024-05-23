@@ -1,9 +1,58 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# Spotify-lookalike
+
+This is a Spotify-looking web app built by Next.JS.
+
+## Desktop
+![image](https://github.com/mihreteab/spotify-lookalike/assets/17984259/2386d883-2ff8-4b8e-a758-696fac68154d)
+
+
+
+
+## Tab
+![image](https://github.com/mihreteab/spotify-lookalike/assets/17984259/fba36c11-2d4a-4f15-a5a5-ecac055fbea2)
+
+
+
+
+## Mobile
+
+![image](https://github.com/mihreteab/spotify-lookalike/assets/17984259/e0a1c35b-2b80-4ec6-8ccd-17b78ebd2164)
+
+![image](https://github.com/mihreteab/spotify-lookalike/assets/17984259/289ae0dd-adbb-40c8-98a4-a5ecc04dfae4)
+
+
+
+## Built With
+
+- Major languages: Next.JS and TailwindCss
+
+## Live Demo
+
+[Live Demo Link](https://spotify-lookalike.vercel.app/)
+
 
 ## Getting Started
 
-First, run the development server:
+To get a local copy up and running follow these simple example steps.
 
+### Prerequisites
+You must have `Git` and `npm` installed on your machine.
+
+### Setup
+Run either of the following commands to clone the repository locally:
+```bash
+git clone https://github.com/mihreteab/spotify-lookalike.git
+```
+```bash
+git clone git@github.com:mihreteab/spotify-lookalike.git
+```
+```
+cd spotify-lookalike
+```
+### Install
+Run `npm install` to install all the necessary dependencies.
+
+### Run
 ```bash
 npm run dev
 # or
@@ -13,24 +62,17 @@ pnpm dev
 # or
 bun dev
 ```
+Then open the browser and navigate to `http://localhost:3000/`.
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Authors
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+👤 **Mihreteab Demeke Eriso**
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+- GitHub: [@mihreteab](https://github.com/mihreteab)
+  
 
-## Learn More
+## 🤝 Contributing
 
-To learn more about Next.js, take a look at the following resources:
+Contributions, issues, and feature requests are welcome!
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+Feel free to check the [issues page](../../issues/).
