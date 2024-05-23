@@ -2,7 +2,7 @@ import { HydrationBoundary, QueryClient, dehydrate } from "@tanstack/react-query
 import { getPlaylistForYou } from "@/api/playlist-for-you";
 import { getMostListend } from "@/api/getMostListend";
 import { getTrackOfTheWeek } from "@/api/track-of-the-week";
-import SpotifyHomePage from "../componet/spotify-home-page";
+import SpotifyHomePage from "./componet/spotify-home-page";
 
 export default async function Home() {
   const queryClient = new QueryClient();
