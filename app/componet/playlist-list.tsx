@@ -3,8 +3,9 @@ import Image from "next/image";
 import { useQuery } from "@tanstack/react-query";
 import { getPlaylistForYou } from "@/api/playlist-for-you";
 import { MusicPlaylist } from "@/api/playlist-for-you";
-import { Dispatch, SetStateAction } from "react";
+import { Dispatch, SetStateAction, useEffect, useRef, useState } from "react";
 import { MusicType } from "./audio-player";
+import ColorThief from 'colorthief'
 
 function MusicCard({
   music,
@@ -22,16 +23,53 @@ function MusicCard({
   >;
   music: MusicPlaylist;
 }) {
+
+  const imgRef = useRef<HTMLImageElement>(null);
+  const [color, setColor] = useState<string | null>(null);
+
+  const rgbToHex = (r: number, g: number, b: number) => '#' + [r, g, b].map(x => {
+    const hex = x.toString(16)
+    return hex.length === 1 ? '0' + hex : hex
+  }).join('')
+
+
+  useEffect(() => {
+    const imgElement = imgRef.current;
+    const colorThief = new ColorThief();
+
+    const extractColor = () => {
+      if (imgElement && imgElement.complete) {
+        const dominantColor = colorThief.getColor(imgElement);
+        setColor(rgbToHex(dominantColor[0], dominantColor[1], dominantColor[2]));
+      } else {
+        imgElement?.addEventListener('load', () => {
+          if (imgElement) {
+            const dominantColor = colorThief.getColor(imgElement);
+            setColor(rgbToHex(dominantColor[0], dominantColor[1], dominantColor[2]));
+          }
+        });
+      }
+    };
+
+    extractColor();
+  }, [music.poster_url]);
+
   return (
     <div className="relative shrink-0 w-44 md:w-[440px]">
-      <div className="bg-gradient-to-r from-cyan-500 to-blue-500">
+      <div className="relative">
         <Image
+          ref={imgRef}
           src={music.poster_url} // Path to your image
           alt={music.title}
           width={176}
           height={176}
           className="object-cover object-top w-44 h-44 rounded-[50px] md:h-[440px] md:w-[440px]"
         />
+        {color && <div
+          className={`absolute bottom-0 right-0 left-0 h-[200px] bg-gradient-to-t rounded-[50px]`}
+          style={{ backgroundImage: `linear-gradient(to top, ${color}, transparent)` }}
+        >
+        </div>}
       </div>
       <p className="p-2.5 md:absolute top-5 left-5">{music.num_of_tracks} Tracks</p>
       <div className="flex pl-2.5 pt-1 gap-2 md:absolute md:bottom-5 md:left-5 md:gap-5">
