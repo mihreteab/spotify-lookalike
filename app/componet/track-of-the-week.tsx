@@ -9,6 +9,9 @@ interface TrackOfTheWeekProps {
   setCurrentPlaying: Dispatch<SetStateAction<{
     audioSrc: string;
     id: string;
+    poster: string;
+    title: string
+    album: string
     musicType: MusicType
   } | null>>
 }
@@ -21,10 +24,19 @@ export default function TrackOfTheWeek(
   const { data, isLoading, isError } = useQuery({
     queryFn: () => getTrackOfTheWeek(),
     queryKey: ["track-of-the-week"], //Array according to Documentation
-  });
+  })
+
+  const formatCmpctNumber = (value: string) => {
+    const number = Number(value.replace(/,/g, ""))
+    const usformatter = Intl.NumberFormat("en-US", {
+      notation: "compact",
+      compactDisplay: "short",
+    })
+    return usformatter.format(number);
+  }
+
   return (
     <>
-
       <div className="flex flex-col border-2 border-customGray p-3.5 gap-12 rounded-3xl">
         {data?.map(item => {
           return (
@@ -39,7 +51,7 @@ export default function TrackOfTheWeek(
                   height={60}
                   className='object-cover object-top w-15 h-15 rounded-xl'
                 />
-                <div>
+                <div className="flex flex-col justify-center pb-1.5	">
                   <p className="text-sm">{item.title}.</p>
                   <p className="text-sm text-[#9CA3AF]">{item.album}</p>
                 </div>
@@ -56,7 +68,9 @@ export default function TrackOfTheWeek(
                       </clipPath>
                     </defs>
                   </svg>
-                  <p>{item.listened}</p>
+
+
+                  <p>{formatCmpctNumber(item.listened)}</p>
                 </div>
                 <div className="flex items-center border-2 rounded-full gap-4 border-customGray p-2">
                   {item.liked ? <svg width="26" height="26" viewBox="0 0 26 26" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -68,6 +82,9 @@ export default function TrackOfTheWeek(
                     onClick={() => setCurrentPlaying({
                       audioSrc: item.track_url,
                       id: item.id,
+                      poster: item.poster_url,
+                      title: item.title,
+                      album: item.album,
                       musicType: 'TRACK_FOR_YOU'
                     })}
                   >

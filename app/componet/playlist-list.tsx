@@ -14,32 +14,39 @@ function MusicCard({
     SetStateAction<{
       audioSrc: string;
       id: string;
+      poster: string
+      title: string
+      album: string
       musicType: MusicType;
     } | null>
   >;
   music: MusicPlaylist;
 }) {
   return (
-    <div className="relative">
+    <div className="relative shrink-0 w-44 md:w-[440px]">
       <div className="bg-gradient-to-r from-cyan-500 to-blue-500">
         <Image
           src={music.poster_url} // Path to your image
           alt={music.title}
           width={176}
           height={176}
-          className="object-cover object-top w-44 h-44 rounded-3xl md:h-60 md:w-60"
+          className="object-cover object-top w-44 h-44 rounded-[50px] md:h-[440px] md:w-[440px]"
         />
       </div>
-      <p className="p-2.5 md:absolute top-0">{music.num_of_tracks} Tracks</p>
-      <div className="flex pl-2.5 pt-1 gap-2 md:absolute top-44">
+      <p className="p-2.5 md:absolute top-5 left-5">{music.num_of_tracks} Tracks</p>
+      <div className="flex pl-2.5 pt-1 gap-2 md:absolute md:bottom-5 md:left-5 md:gap-5">
         <audio src={music.track_url} />
         <button
+          className="h-[60px] w-[60px]"
           onClick={() => {
             setCurrentPlaying(null);
             setCurrentPlaying({
               musicType: "PLAYLISTFORYOU",
+              poster: music.poster_url,
               audioSrc: music.track_url,
               id: music.id,
+              title: music.title,
+              album: music.collection_moto
             });
           }}
         >
@@ -49,6 +56,7 @@ function MusicCard({
             viewBox="0 0 42 42"
             fill="none"
             xmlns="http://www.w3.org/2000/svg"
+            className="md:h-[60px] md:w-[60px]"
           >
             <rect
               x="4.42859"
@@ -68,8 +76,8 @@ function MusicCard({
           </svg>
         </button>
         <div className="flex flex-col justify-center">
-          <p className="text-sm">{music.title}</p>
-          <p className="text-xs">{music.collection_moto}</p>
+          <p className="text-sm truncate w-28 md:w-64">{music.title}</p>
+          <p className="text-xs truncate  w-28 md:w-64">{music.collection_moto}</p>
         </div>
       </div>
     </div>
@@ -81,6 +89,9 @@ interface MusicPlaylistProps {
     SetStateAction<{
       audioSrc: string;
       id: string;
+      poster: string
+      title: string
+      album: string
       musicType: MusicType;
     } | null>
   >;
