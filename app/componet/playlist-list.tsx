@@ -4,24 +4,17 @@ import { useQuery } from "@tanstack/react-query";
 import { getPlaylistForYou } from "@/api/playlist-for-you";
 import { MusicPlaylist } from "@/api/playlist-for-you";
 import { Dispatch, SetStateAction, useEffect, useRef, useState } from "react";
-import { MusicType } from "./audio-player";
 import ColorThief from 'colorthief'
+import { PlaylistType } from "./spotify-home-page";
 
 function MusicCard({
   music,
-  setCurrentPlaying,
+  setCurrentPlayingPlaylist,
+  data,
 }: {
-  setCurrentPlaying: Dispatch<
-    SetStateAction<{
-      audioSrc: string;
-      id: string;
-      poster: string
-      title: string
-      album: string
-      musicType: MusicType;
-    } | null>
-  >;
+  setCurrentPlayingPlaylist: Dispatch<SetStateAction<PlaylistType[]>>;
   music: MusicPlaylist;
+  data: MusicPlaylist[]
 }) {
 
   const imgRef = useRef<HTMLImageElement>(null);
@@ -31,6 +24,20 @@ function MusicCard({
     const hex = x.toString(16)
     return hex.length === 1 ? '0' + hex : hex
   }).join('')
+
+  const handlePlay = (id: string) => {
+    setCurrentPlayingPlaylist([])
+    setCurrentPlayingPlaylist(data.map((item => ({
+      id: item.id,
+      src: item.track_url,
+      poster: item.poster_url,
+      title: item.title,
+      album: item.collection_moto,
+      liked :item.liked,
+      musicType: "PLAYLISTFORYOU",
+      currentplaying: id === item.id ? true : false
+    }))));
+  }
 
 
   useEffect(() => {
@@ -76,17 +83,7 @@ function MusicCard({
         <audio src={music.track_url} />
         <button
           className="h-[60px] w-[60px]"
-          onClick={() => {
-            setCurrentPlaying(null);
-            setCurrentPlaying({
-              musicType: "PLAYLISTFORYOU",
-              poster: music.poster_url,
-              audioSrc: music.track_url,
-              id: music.id,
-              title: music.title,
-              album: music.collection_moto
-            });
-          }}
+          onClick={() => handlePlay(music.id)}
         >
           <svg
             width="42"
@@ -123,19 +120,10 @@ function MusicCard({
 }
 
 interface MusicPlaylistProps {
-  setCurrentPlaying: Dispatch<
-    SetStateAction<{
-      audioSrc: string;
-      id: string;
-      poster: string
-      title: string
-      album: string
-      musicType: MusicType;
-    } | null>
-  >;
+  setCurrentPlayingPlaylist: Dispatch<SetStateAction<PlaylistType[]>>;
 }
 
-export default function MusicList({ setCurrentPlaying }: MusicPlaylistProps) {
+export default function MusicList({ setCurrentPlayingPlaylist }: MusicPlaylistProps) {
   const { data, isLoading, isError } = useQuery({
     queryFn: () => getPlaylistForYou(),
     queryKey: ["playlist-for-you"], //Array according to Documentation
@@ -148,7 +136,10 @@ export default function MusicList({ setCurrentPlaying }: MusicPlaylistProps) {
           return (
             <MusicCard
               key={music.id}
-              setCurrentPlaying={setCurrentPlaying} music={music} />
+              setCurrentPlayingPlaylist={setCurrentPlayingPlaylist} music={music}
+              // setCurrentPlayingItem ={setCurrentPlayingItem}
+              data={data}
+            />
           );
         })}
       </div>

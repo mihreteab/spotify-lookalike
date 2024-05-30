@@ -3,22 +3,16 @@ import { getTrackOfTheWeek } from "@/api/track-of-the-week";
 import { useQuery } from "@tanstack/react-query";
 import Image from "next/image";
 import { Dispatch, SetStateAction } from "react";
-import { MusicType } from "./audio-player";
+import { PlaylistType } from "./spotify-home-page";
 
 interface TrackOfTheWeekProps {
-  setCurrentPlaying: Dispatch<SetStateAction<{
-    audioSrc: string;
-    id: string;
-    poster: string;
-    title: string
-    album: string
-    musicType: MusicType
-  } | null>>
+  setCurrentPlayingPlaylist: Dispatch<SetStateAction<PlaylistType[]>>;
+
 }
 
 export default function TrackOfTheWeek(
   {
-    setCurrentPlaying
+    setCurrentPlayingPlaylist
   }: TrackOfTheWeekProps
 ) {
   const { data, isLoading, isError } = useQuery({
@@ -26,6 +20,21 @@ export default function TrackOfTheWeek(
     queryKey: ["track-of-the-week"], //Array according to Documentation
   })
 
+  const handlePlay = (id: string) => {
+    setCurrentPlayingPlaylist([])
+    if (data && !isLoading) {
+      setCurrentPlayingPlaylist(data.map((item => ({
+        id: item.id,
+        src: item.track_url,
+        poster: item.poster_url,
+        title: item.title,
+        album: item.album,
+        liked: item.liked,
+        musicType: "TRACK_FOR_YOU",
+        currentplaying: id === item.id ? true : false
+      }))))
+    }
+  }
   const formatCmpctNumber = (value: string) => {
     const number = Number(value.replace(/,/g, ""))
     const usformatter = Intl.NumberFormat("en-US", {
@@ -68,8 +77,6 @@ export default function TrackOfTheWeek(
                       </clipPath>
                     </defs>
                   </svg>
-
-
                   <p>{formatCmpctNumber(item.listened)}</p>
                 </div>
                 <div className="flex items-center border-2 rounded-full gap-4 border-customGray p-2">
@@ -79,14 +86,7 @@ export default function TrackOfTheWeek(
                     <path fillRule="evenodd" clip-rule="evenodd" d="M4.46503 6.96492C5.40267 6.02756 6.67421 5.50098 8.00003 5.50098C9.32585 5.50098 10.5974 6.02756 11.535 6.96492L13 8.42867L14.465 6.96492C14.9263 6.48737 15.478 6.10646 16.088 5.84441C16.698 5.58237 17.3541 5.44443 18.018 5.43867C18.6819 5.4329 19.3403 5.5594 19.9548 5.81081C20.5693 6.06221 21.1275 6.43348 21.597 6.90294C22.0665 7.37241 22.4377 7.93067 22.6891 8.54515C22.9405 9.15963 23.0671 9.81803 23.0613 10.4819C23.0555 11.1458 22.9176 11.8019 22.6555 12.4119C22.3935 13.022 22.0126 13.5737 21.535 14.0349L13 22.5712L4.46503 14.0349C3.52768 13.0973 3.0011 11.8257 3.0011 10.4999C3.0011 9.1741 3.52768 7.90256 4.46503 6.96492Z" fill="#ffffff" />
                   </svg>}
                   <button
-                    onClick={() => setCurrentPlaying({
-                      audioSrc: item.track_url,
-                      id: item.id,
-                      poster: item.poster_url,
-                      title: item.title,
-                      album: item.album,
-                      musicType: 'TRACK_FOR_YOU'
-                    })}
+                    onClick={() => handlePlay(item.id)}
                   >
                     <svg width="39" height="38" viewBox="0 0 39 38" fill="none" xmlns="http://www.w3.org/2000/svg">
                       <path d="M18.6098 13.0721L25.0038 17.3361C25.2777 17.5188 25.5023 17.7682 25.6576 18.0585C25.8129 18.3488 25.8942 18.6729 25.8942 19.0021C25.8942 19.3314 25.8129 19.6555 25.6576 19.9458C25.5023 20.2361 25.2777 20.4835 25.0038 20.6661L18.6098 24.9301C18.3086 25.1311 17.9585 25.2465 17.5968 25.2641C17.2351 25.2817 16.8755 25.2007 16.5562 25.0299C16.237 24.8591 15.9701 24.6048 15.784 24.2942C15.5979 23.9835 15.4997 23.6282 15.4998 23.2661V14.7401C15.499 14.3777 15.5967 14.0219 15.7825 13.7107C15.9682 13.3995 16.2351 13.1446 16.5545 12.9733C16.8739 12.802 17.2338 12.7207 17.5958 12.7381C17.9578 12.7556 18.3083 12.871 18.6098 13.0721Z" fill="white" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />

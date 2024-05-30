@@ -8,15 +8,20 @@ import { useState } from "react";
 import AudioPlayer, { MusicType } from "./audio-player";
 import NavBar from '@/app/ui/nav-bar'
 
+export interface PlaylistType {
+  id: string
+  src: string
+  poster: string
+  title: string
+  album: string
+  liked: boolean
+  musicType: MusicType
+  currentPlaying?: boolean
+}
+
 export default function SpotifyHomePage() {
-  const [currentPlaying, setCurrentPlaying] = useState<{
-    audioSrc: string,
-    id: string,
-    poster: string,
-    title: string,
-    album: string,
-    musicType: MusicType
-  } | null>(null)
+  const [currentPlayingPlylist, setCurrentPlayingPlaylist] = useState<PlaylistType[]>([])
+  const [currentPlayingItem, setCurrentPlayingItem] = useState()
 
   return (
     <>
@@ -29,7 +34,7 @@ export default function SpotifyHomePage() {
         <div className='border-2 border-customGray rounded-full flex-1 flex justify-between items-center p-5 h-12 md:h-18.75'>
           <div className='flex content-center gap-5 flex-1 items-center'>
             <div className='border-3 border-white h-5 w-5 rounded-xl'></div>
-            <input placeholder="Search..." className="focus:outline-none bg-[#000000] w-full h-12"/>
+            <input placeholder="Search..." className="focus:outline-none bg-[#000000] w-full h-11 md:h-18"/>
           </div>
           <div className='hidden md:flex content-center gap-5'>
             <svg width="25" height="19" viewBox="0 0 25 19" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -60,7 +65,7 @@ export default function SpotifyHomePage() {
         <NavBar />
       </div>
       <div className="flex">
-        <div className="hidden lg:flex flex-col gap-10 pt-10 items-center w-32 shrink-0">
+        <div className="fixed flex bg-[#000000] md:relative bottom-0 right-0 left-0 h-16 md:h-auto justify-around  md:justify-start flex-row md:flex-col md:gap-10 md:pt-10 items-center md:w-32 md:shrink-0">
           <svg width="31" height="30" viewBox="0 0 31 30" fill="none" xmlns="http://www.w3.org/2000/svg">
             <path d="M16.8852 3.24496C16.5108 2.9125 16.0152 2.72726 15.5001 2.72726C14.985 2.72726 14.4893 2.9125 14.115 3.24496L4.34889 11.9154C4.04986 12.1812 3.81175 12.5016 3.64916 12.8569C3.48657 13.2122 3.40291 13.595 3.40332 13.9817V24.5309C3.40386 25.2841 3.72271 26.0062 4.2898 26.5385C4.85689 27.0709 5.6258 27.37 6.42752 27.37H9.45171C10.2538 27.37 12.4759 27.3485 12.4759 27.3485C12.4759 27.3485 12.4759 25.2825 12.4759 24.529V19.7942C12.4759 19.543 12.5821 19.3022 12.7712 19.1246C12.9602 18.947 13.2166 18.8472 13.484 18.8472H17.5162C17.7836 18.8472 18.04 18.947 18.229 19.1246C18.4181 19.3022 18.5243 19.543 18.5243 19.7942V24.529C18.5243 25.2825 18.5243 27.3485 18.5243 27.3485C18.5243 27.3485 20.7464 27.37 21.5485 27.37H24.5727C25.3747 27.37 26.144 27.0706 26.7111 26.5379C27.2782 26.0051 27.5969 25.2825 27.5969 24.529V13.9798C27.5967 13.5932 27.5126 13.2108 27.3497 12.8558C27.1868 12.5008 26.9484 12.1809 26.6493 11.9154L16.8852 3.24117V3.24496Z" fill="white" />
           </svg>
@@ -81,7 +86,8 @@ export default function SpotifyHomePage() {
         <div className='ml-6.5 overflow-hidden'>
           <p className="py-6.5">PlayList For You</p>
           <MusicList
-            setCurrentPlaying={setCurrentPlaying}
+            setCurrentPlayingPlaylist={setCurrentPlayingPlaylist}
+            // setCurrentPlayingItem={setCurrentPlayingItem}
           />
           <div className="flex flex-col md:w-[697px] lg:w-auto lg:flex-row lg:gap-20">
             <div>
@@ -91,18 +97,13 @@ export default function SpotifyHomePage() {
             <div>
               <p className="py-6.5">Tracks of the week</p>
               <TrackOfTheWeek
-                setCurrentPlaying={setCurrentPlaying}
+                setCurrentPlayingPlaylist={setCurrentPlayingPlaylist}
               />
             </div>
           </div>
         </div>
-        {currentPlaying && <AudioPlayer
-          musicType={currentPlaying?.musicType as MusicType}
-          id={currentPlaying?.id as string}
-          src={currentPlaying?.audioSrc as string}
-          poster={currentPlaying?.poster}
-          title={currentPlaying?.title}
-          album={currentPlaying?.album}
+        {currentPlayingPlylist.length > 0 && <AudioPlayer
+          playlist={currentPlayingPlylist}
         />}
       </div>
     </>
