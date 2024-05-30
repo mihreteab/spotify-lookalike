@@ -21,7 +21,6 @@ export interface PlaylistType {
 
 export default function SpotifyHomePage() {
   const [currentPlayingPlylist, setCurrentPlayingPlaylist] = useState<PlaylistType[]>([])
-  const [currentPlayingItem, setCurrentPlayingItem] = useState()
 
   return (
     <>
@@ -33,7 +32,7 @@ export default function SpotifyHomePage() {
         </div>
         <div className='border-2 border-customGray rounded-full flex-1 flex justify-between items-center p-5 h-12 md:h-18.75'>
           <div className='flex content-center gap-5 flex-1 items-center'>
-            <div className='border-3 border-white h-5 w-5 rounded-xl'></div>
+            <div className='border-3 border-white h-5 w-5 rounded-xl shrink-0'></div>
             <input placeholder="Search..." className="focus:outline-none bg-[#000000] w-full h-11 md:h-18"/>
           </div>
           <div className='hidden md:flex content-center gap-5'>
