@@ -240,7 +240,7 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({ playlist }: AudioPlayerProps)
       <div className={classNames('flex flex-col gap-5 fixed p-5 border-red bg-[#000000] bottom-16 left-0 right-0', {
         'block': open,
         'hidden': !open
-      })}>
+      }, 'md:hidden')}>
         <div className="h-5 w-5" onClick={closeFullScreen}>
           <svg width="14" height="9" viewBox="0 0 14 9" fill="none" xmlns="http://www.w3.org/2000/svg">
             <path d="M1 1.59985L7 7.59985L13 1.59985" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
@@ -251,7 +251,7 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({ playlist }: AudioPlayerProps)
           alt={currentPlaying.title}
           width={380}
           height={358}
-          className='object-cover object-top w-[380px] h-[358px] rounded-md'
+          className='object-cover object-top w-full md:w-[380px] h-[358px] rounded-md'
         />
         <div className='flex justify-between items-center'>
           <div>
@@ -289,7 +289,7 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({ playlist }: AudioPlayerProps)
           </div>
           <div>
             <div className='flex justify-center'>
-              <button onClick={togglePlayPause} className="p-2 bg-white">
+              <button onClick={playPrev} className="p-2 bg-white">
                 <svg width="30" height="26" viewBox="0 0 30 26" fill="none" xmlns="http://www.w3.org/2000/svg">
                   <path d="M6.25 20.2917V5.70837" stroke="#F3F4F6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
                   <path d="M23.75 21.3333L11.25 13L23.75 4.66663V21.3333Z" fill="#F3F4F6" stroke="#F3F4F6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
@@ -306,7 +306,7 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({ playlist }: AudioPlayerProps)
                   </svg>
                 }
               </button>
-              <button onClick={togglePlayPause} className="p-2 bg-white">
+              <button onClick={playNext} className="p-2 bg-white">
                 <svg width="30" height="26" viewBox="0 0 30 26" fill="none" xmlns="http://www.w3.org/2000/svg">
                   <path d="M23.75 5.70829L23.75 20.2916" stroke="#F3F4F6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
                   <path d="M6.25 4.66671L18.75 13L6.25 21.3334L6.25 4.66671Z" fill="#F3F4F6" stroke="#F3F4F6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
