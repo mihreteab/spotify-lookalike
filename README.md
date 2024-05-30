@@ -2,24 +2,7 @@
 
 This is a Spotify-looking web app built by Next.JS.
 
-## Desktop
-![image](https://github.com/mihreteab/spotify-lookalike/assets/17984259/2386d883-2ff8-4b8e-a758-696fac68154d)
-
-
-
-
-## Tab
-![image](https://github.com/mihreteab/spotify-lookalike/assets/17984259/fba36c11-2d4a-4f15-a5a5-ecac055fbea2)
-
-
-
-
-## Mobile
-
-![image](https://github.com/mihreteab/spotify-lookalike/assets/17984259/e0a1c35b-2b80-4ec6-8ccd-17b78ebd2164)
-
-![image](https://github.com/mihreteab/spotify-lookalike/assets/17984259/289ae0dd-adbb-40c8-98a4-a5ecc04dfae4)
-
+https://www.loom.com/share/534bb61323e04f9ba6e675dbe8f0434b
 
 
 ## Built With
