@@ -3,45 +3,87 @@ import Image from "next/image";
 import { useQuery } from "@tanstack/react-query";
 import { getPlaylistForYou } from "@/api/playlist-for-you";
 import { MusicPlaylist } from "@/api/playlist-for-you";
-import { Dispatch, SetStateAction } from "react";
-import { MusicType } from "./audio-player";
+import { Dispatch, SetStateAction, useEffect, useRef, useState } from "react";
+import ColorThief from 'colorthief'
+import { PlaylistType } from "./spotify-home-page";
 
 function MusicCard({
   music,
-  setCurrentPlaying,
+  setCurrentPlayingPlaylist,
+  data,
 }: {
-  setCurrentPlaying: Dispatch<
-    SetStateAction<{
-      audioSrc: string;
-      id: string;
-      musicType: MusicType;
-    } | null>
-  >;
+  setCurrentPlayingPlaylist: Dispatch<SetStateAction<PlaylistType[]>>;
   music: MusicPlaylist;
+  data: MusicPlaylist[]
 }) {
+
+  const imgRef = useRef<HTMLImageElement>(null);
+  const [color, setColor] = useState<string | null>(null);
+
+  const rgbToHex = (r: number, g: number, b: number) => '#' + [r, g, b].map(x => {
+    const hex = x.toString(16)
+    return hex.length === 1 ? '0' + hex : hex
+  }).join('')
+
+  const handlePlay = (id: string) => {
+    setCurrentPlayingPlaylist([])
+    setCurrentPlayingPlaylist(data.map((item => ({
+      id: item.id,
+      src: item.track_url,
+      poster: item.poster_url,
+      title: item.title,
+      album: item.collection_moto,
+      liked :item.liked,
+      musicType: "PLAYLISTFORYOU",
+      currentplaying: id === item.id ? true : false
+    }))));
+  }
+
+
+  useEffect(() => {
+    const imgElement = imgRef.current;
+    const colorThief = new ColorThief();
+
+    const extractColor = () => {
+      if (imgElement && imgElement.complete) {
+        const dominantColor = colorThief.getColor(imgElement);
+        setColor(rgbToHex(dominantColor[0], dominantColor[1], dominantColor[2]));
+      } else {
+        imgElement?.addEventListener('load', () => {
+          if (imgElement) {
+            const dominantColor = colorThief.getColor(imgElement);
+            setColor(rgbToHex(dominantColor[0], dominantColor[1], dominantColor[2]));
+          }
+        });
+      }
+    };
+
+    extractColor();
+  }, [music.poster_url]);
+
   return (
-    <div className="relative">
-      <div className="bg-gradient-to-r from-cyan-500 to-blue-500">
+    <div className="relative shrink-0 w-44 md:w-[440px]">
+      <div className="relative">
         <Image
+          ref={imgRef}
           src={music.poster_url} // Path to your image
           alt={music.title}
           width={176}
           height={176}
-          className="object-cover object-top w-44 h-44 rounded-3xl md:h-60 md:w-60"
+          className="object-cover object-top w-44 h-44 rounded-[50px] md:h-[440px] md:w-[440px]"
         />
+        {color && <div
+          className={`absolute bottom-0 right-0 left-0 h-[200px] bg-gradient-to-t rounded-[50px]`}
+          style={{ backgroundImage: `linear-gradient(to top, ${color}, transparent)` }}
+        >
+        </div>}
       </div>
-      <p className="p-2.5 md:absolute top-0">{music.num_of_tracks} Tracks</p>
-      <div className="flex pl-2.5 pt-1 gap-2 md:absolute top-44">
+      <p className="p-2.5 md:absolute top-5 left-5">{music.num_of_tracks} Tracks</p>
+      <div className="flex pl-2.5 pt-1 gap-2 md:absolute md:bottom-5 md:left-5 md:gap-5">
         <audio src={music.track_url} />
         <button
-          onClick={() => {
-            setCurrentPlaying(null);
-            setCurrentPlaying({
-              musicType: "PLAYLISTFORYOU",
-              audioSrc: music.track_url,
-              id: music.id,
-            });
-          }}
+          className="h-[60px] w-[60px]"
+          onClick={() => handlePlay(music.id)}
         >
           <svg
             width="42"
@@ -49,6 +91,7 @@ function MusicCard({
             viewBox="0 0 42 42"
             fill="none"
             xmlns="http://www.w3.org/2000/svg"
+            className="md:h-[60px] md:w-[60px]"
           >
             <rect
               x="4.42859"
@@ -68,8 +111,8 @@ function MusicCard({
           </svg>
         </button>
         <div className="flex flex-col justify-center">
-          <p className="text-sm">{music.title}</p>
-          <p className="text-xs">{music.collection_moto}</p>
+          <p className="text-sm truncate w-28 md:w-64">{music.title}</p>
+          <p className="text-xs truncate  w-28 md:w-64">{music.collection_moto}</p>
         </div>
       </div>
     </div>
@@ -77,16 +120,10 @@ function MusicCard({
 }
 
 interface MusicPlaylistProps {
-  setCurrentPlaying: Dispatch<
-    SetStateAction<{
-      audioSrc: string;
-      id: string;
-      musicType: MusicType;
-    } | null>
-  >;
+  setCurrentPlayingPlaylist: Dispatch<SetStateAction<PlaylistType[]>>;
 }
 
-export default function MusicList({ setCurrentPlaying }: MusicPlaylistProps) {
+export default function MusicList({ setCurrentPlayingPlaylist }: MusicPlaylistProps) {
   const { data, isLoading, isError } = useQuery({
     queryFn: () => getPlaylistForYou(),
     queryKey: ["playlist-for-you"], //Array according to Documentation
@@ -99,7 +136,10 @@ export default function MusicList({ setCurrentPlaying }: MusicPlaylistProps) {
           return (
             <MusicCard
               key={music.id}
-              setCurrentPlaying={setCurrentPlaying} music={music} />
+              setCurrentPlayingPlaylist={setCurrentPlayingPlaylist} music={music}
+              // setCurrentPlayingItem ={setCurrentPlayingItem}
+              data={data}
+            />
           );
         })}
       </div>

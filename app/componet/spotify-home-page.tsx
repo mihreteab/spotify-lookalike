@@ -8,26 +8,33 @@ import { useState } from "react";
 import AudioPlayer, { MusicType } from "./audio-player";
 import NavBar from '@/app/ui/nav-bar'
 
-export default function SpotifyHomePage() {
-  const [currentPlaying, setCurrentPlaying] = useState<{
-    audioSrc: string,
-    id: string,
-    musicType: MusicType
-  } | null>(null)
+export interface PlaylistType {
+  id: string
+  src: string
+  poster: string
+  title: string
+  album: string
+  liked: boolean
+  musicType: MusicType
+  currentPlaying?: boolean
+}
 
-  console.log("AuDIO SORUCE", currentPlaying)
+export default function SpotifyHomePage() {
+  const [currentPlayingPlylist, setCurrentPlayingPlaylist] = useState<PlaylistType[]>([])
+  const [currentPlayingItem, setCurrentPlayingItem] = useState()
+
   return (
     <>
-      <div className='flex gap-x-12 mt-4.5 items-center py-3 px-5 md:mt-10 pt-0 md:px-8.75'>
-        <div className='lg:pl-10'>
+      <div className='flex gap-x-12 mt-4.5 items-center py-3 px-5 md:mt-10 pt-0 md:px-7'>
+        <div>
           <svg width="60" height="60" viewBox="0 0 61 60" className="h-12 w-12 md:h-18.75 md:w-18.75" fill="none" xmlns="http://www.w3.org/2000/svg">
             <path d="M30.4998 0C13.9317 0 0.5 13.4317 0.5 30.0002C0.5 46.5694 13.9317 60 30.4998 60C47.0697 60 60.5 46.5694 60.5 30.0002C60.5 13.4328 47.0697 0.00143297 30.4995 0.00143297L30.4998 0ZM44.2575 43.2689C43.7202 44.1502 42.5667 44.4296 41.6854 43.8886C34.6418 39.5861 25.7747 38.6117 15.3321 40.9976C14.3258 41.2269 13.3227 40.5964 13.0935 39.5897C12.8631 38.583 13.4911 37.5799 14.4999 37.3507C25.9276 34.7387 35.7301 35.8639 43.6378 40.6967C44.5191 41.2376 44.7985 42.3876 44.2575 43.2689ZM47.9295 35.0991C47.2524 36.2007 45.8123 36.5482 44.7125 35.8711C36.6486 30.9133 24.3564 29.4779 14.8184 32.3732C13.5814 32.7468 12.2749 32.0497 11.8995 30.8148C11.5269 29.5778 12.2244 28.2738 13.4592 27.8976C24.3543 24.5917 37.8988 26.1931 47.1593 31.8838C48.259 32.5609 48.6065 34.0011 47.9295 35.0994V35.0991ZM48.2447 26.5929C38.5759 20.8499 22.6236 20.3218 13.3922 23.1237C11.9098 23.5733 10.3422 22.7364 9.89297 21.254C9.44374 19.7708 10.2799 18.2042 11.7633 17.7536C22.3603 14.5365 39.9766 15.1581 51.1085 21.7666C52.4447 22.558 52.8817 24.2801 52.09 25.6117C51.3019 26.9451 49.5752 27.3846 48.2462 26.5929H48.2447Z" fill="#1ED760" />
           </svg>
         </div>
         <div className='border-2 border-customGray rounded-full flex-1 flex justify-between items-center p-5 h-12 md:h-18.75'>
-          <div className='flex content-center gap-5'>
+          <div className='flex content-center gap-5 flex-1 items-center'>
             <div className='border-3 border-white h-5 w-5 rounded-xl'></div>
-            <p>Search...</p>
+            <input placeholder="Search..." className="focus:outline-none bg-[#000000] w-full h-11 md:h-18"/>
           </div>
           <div className='hidden md:flex content-center gap-5'>
             <svg width="25" height="19" viewBox="0 0 25 19" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -57,29 +64,48 @@ export default function SpotifyHomePage() {
         </div>
         <NavBar />
       </div>
-      <div className='ml-6.5'>
-        <p className="py-6.5">PlayList For You</p>
-        <MusicList
-          setCurrentPlaying={setCurrentPlaying}
-        />
-        <div className="flex flex-col md:flex-row md:gap-20">
-          <div>
-            <p className="py-6.5">What you listen to the most</p>
-            <MostListendList />
-          </div>
-          <div>
-            <p className="py-6.5">Tracks of the week</p>
-            <TrackOfTheWeek
-              setCurrentPlaying={setCurrentPlaying}
-            />
+      <div className="flex">
+        <div className="fixed flex bg-[#000000] md:relative bottom-0 right-0 left-0 h-16 md:h-auto justify-around  md:justify-start flex-row md:flex-col md:gap-10 md:pt-10 items-center md:w-32 md:shrink-0">
+          <svg width="31" height="30" viewBox="0 0 31 30" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M16.8852 3.24496C16.5108 2.9125 16.0152 2.72726 15.5001 2.72726C14.985 2.72726 14.4893 2.9125 14.115 3.24496L4.34889 11.9154C4.04986 12.1812 3.81175 12.5016 3.64916 12.8569C3.48657 13.2122 3.40291 13.595 3.40332 13.9817V24.5309C3.40386 25.2841 3.72271 26.0062 4.2898 26.5385C4.85689 27.0709 5.6258 27.37 6.42752 27.37H9.45171C10.2538 27.37 12.4759 27.3485 12.4759 27.3485C12.4759 27.3485 12.4759 25.2825 12.4759 24.529V19.7942C12.4759 19.543 12.5821 19.3022 12.7712 19.1246C12.9602 18.947 13.2166 18.8472 13.484 18.8472H17.5162C17.7836 18.8472 18.04 18.947 18.229 19.1246C18.4181 19.3022 18.5243 19.543 18.5243 19.7942V24.529C18.5243 25.2825 18.5243 27.3485 18.5243 27.3485C18.5243 27.3485 20.7464 27.37 21.5485 27.37H24.5727C25.3747 27.37 26.144 27.0706 26.7111 26.5379C27.2782 26.0051 27.5969 25.2825 27.5969 24.529V13.9798C27.5967 13.5932 27.5126 13.2108 27.3497 12.8558C27.1868 12.5008 26.9484 12.1809 26.6493 11.9154L16.8852 3.24117V3.24496Z" fill="white" />
+          </svg>
+          <svg width="31" height="30" viewBox="0 0 31 30" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path fill-rule="evenodd" clip-rule="evenodd" d="M15.5 28.5C22.9558 28.5 29 22.4558 29 15C29 7.54416 22.9558 1.5 15.5 1.5C8.04416 1.5 2 7.54416 2 15C2 22.4558 8.04416 28.5 15.5 28.5ZM15.9772 11.1794C18.7052 9.85514 20.0692 9.19301 20.7876 9.6837C20.9418 9.789 21.075 9.92216 21.1803 10.0763C21.6709 10.7947 21.0088 12.1587 19.6846 14.8867L19.6846 14.8867C18.9765 16.3454 18.6225 17.0747 18.011 17.2705C17.8744 17.3143 17.7321 17.3382 17.5887 17.3416C17.5035 17.3436 17.4195 17.3353 17.3352 17.3166C17.064 17.8297 16.3414 18.1805 15.0228 18.8206C12.2948 20.1449 10.9308 20.807 10.2124 20.3163C10.0582 20.211 9.92504 20.0778 9.81974 19.9237C9.32905 19.2053 9.99118 17.8413 11.3154 15.1133C12.0235 13.6546 12.3775 12.9253 12.989 12.7295C13.1256 12.6857 13.2679 12.6618 13.4113 12.6584C13.4965 12.6564 13.5805 12.6647 13.6648 12.6834C13.936 12.1703 14.6586 11.8195 15.9772 11.1794Z" fill="#333333" />
+          </svg>
+          <svg width="31" height="30" viewBox="0 0 31 30" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path fill-rule="evenodd" clip-rule="evenodd" d="M11 6C11 4.80653 11.4741 3.66193 12.318 2.81802C13.1619 1.97411 14.3065 1.5 15.5 1.5C16.6935 1.5 17.8381 1.97411 18.682 2.81802C19.5259 3.66193 20 4.80653 20 6V12C20 13.1935 19.5259 14.3381 18.682 15.182C17.8381 16.0259 16.6935 16.5 15.5 16.5C14.3065 16.5 13.1619 16.0259 12.318 15.182C11.4741 14.3381 11 13.1935 11 12V6ZM17 22.395C19.4993 22.0339 21.7848 20.7844 23.4378 18.8752C25.0907 16.9661 26.0003 14.5253 26 12C26 11.6022 25.842 11.2206 25.5607 10.9393C25.2794 10.658 24.8978 10.5 24.5 10.5C24.1022 10.5 23.7206 10.658 23.4393 10.9393C23.158 11.2206 23 11.6022 23 12C23 13.9891 22.2098 15.8968 20.8033 17.3033C19.3968 18.7098 17.4891 19.5 15.5 19.5C13.5109 19.5 11.6032 18.7098 10.1967 17.3033C8.79018 15.8968 8 13.9891 8 12C8 11.6022 7.84196 11.2206 7.56066 10.9393C7.27936 10.658 6.89782 10.5 6.5 10.5C6.10218 10.5 5.72064 10.658 5.43934 10.9393C5.15804 11.2206 5 11.6022 5 12C4.99966 14.5253 5.9093 16.9661 7.56223 18.8752C9.21516 20.7844 11.5007 22.0339 14 22.395V23.25V24V24.75V25.5C14 25.5 14 25.5 14 26.25C14 27.75 17 27.75 17 26.25C17 25.5 17 25.5 17 25.5V24.75C17 24.75 17 24 17 23.25C17 22.5 17 22.395 17 22.395Z" fill="#333333" />
+          </svg>
+          <svg width="31" height="30" viewBox="0 0 31 30" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M11 4.5C10.6022 4.5 10.2206 4.65804 9.93934 4.93934C9.65804 5.22064 9.5 5.60218 9.5 6C9.5 6.39782 9.65804 6.77936 9.93934 7.06066C10.2206 7.34196 10.6022 7.5 11 7.5H20C20.3978 7.5 20.7794 7.34196 21.0607 7.06066C21.342 6.77936 21.5 6.39782 21.5 6C21.5 5.60218 21.342 5.22064 21.0607 4.93934C20.7794 4.65804 20.3978 4.5 20 4.5H11ZM6.5 10.5C6.5 10.1022 6.65804 9.72064 6.93934 9.43934C7.22064 9.15804 7.60218 9 8 9H23C23.3978 9 23.7794 9.15804 24.0607 9.43934C24.342 9.72064 24.5 10.1022 24.5 10.5C24.5 10.8978 24.342 11.2794 24.0607 11.5607C23.7794 11.842 23.3978 12 23 12H8C7.60218 12 7.22064 11.842 6.93934 11.5607C6.65804 11.2794 6.5 10.8978 6.5 10.5ZM3.5 16.5C3.5 15.7044 3.81607 14.9413 4.37868 14.3787C4.94129 13.8161 5.70435 13.5 6.5 13.5H24.5C25.2956 13.5 26.0587 13.8161 26.6213 14.3787C27.1839 14.9413 27.5 15.7044 27.5 16.5V22.5C27.5 23.2956 27.1839 24.0587 26.6213 24.6213C26.0587 25.1839 25.2956 25.5 24.5 25.5H6.5C5.70435 25.5 4.94129 25.1839 4.37868 24.6213C3.81607 24.0587 3.5 23.2956 3.5 22.5V16.5Z" fill="#333333" />
+          </svg>
+          <svg width="31" height="30" viewBox="0 0 31 30" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path fill-rule="evenodd" clip-rule="evenodd" d="M5.25794 7.758C6.38311 6.63317 7.90895 6.00128 9.49994 6.00128C11.0909 6.00128 12.6168 6.63317 13.7419 7.758L15.4999 9.5145L17.2579 7.758C17.8114 7.18494 18.4735 6.72784 19.2055 6.41339C19.9375 6.09894 20.7249 5.93342 21.5215 5.9265C22.3182 5.91957 23.1083 6.07138 23.8457 6.37307C24.583 6.67475 25.253 7.12027 25.8163 7.68363C26.3797 8.24698 26.8252 8.9169 27.1269 9.65427C27.4286 10.3917 27.5804 11.1817 27.5734 11.9784C27.5665 12.7751 27.401 13.5624 27.0865 14.2944C26.7721 15.0265 26.315 15.6885 25.7419 16.242L15.4999 26.4855L5.25794 16.242C4.13311 15.1168 3.50122 13.591 3.50122 12C3.50122 10.409 4.13311 8.88316 5.25794 7.758Z" fill="#333333" />
+          </svg>
+
+        </div>
+        <div className='ml-6.5 overflow-hidden'>
+          <p className="py-6.5">PlayList For You</p>
+          <MusicList
+            setCurrentPlayingPlaylist={setCurrentPlayingPlaylist}
+            // setCurrentPlayingItem={setCurrentPlayingItem}
+          />
+          <div className="flex flex-col md:w-[697px] lg:w-auto lg:flex-row lg:gap-20">
+            <div>
+              <p className="py-6.5">What you listen to the most</p>
+              <MostListendList />
+            </div>
+            <div>
+              <p className="py-6.5">Tracks of the week</p>
+              <TrackOfTheWeek
+                setCurrentPlayingPlaylist={setCurrentPlayingPlaylist}
+              />
+            </div>
           </div>
         </div>
+        {currentPlayingPlylist.length > 0 && <AudioPlayer
+          playlist={currentPlayingPlylist}
+        />}
       </div>
-      {currentPlaying && <AudioPlayer
-        musicType={currentPlaying?.musicType as MusicType}
-        id={currentPlaying?.id as string}
-        src={currentPlaying?.audioSrc as string}
-      />}
     </>
   )
 }

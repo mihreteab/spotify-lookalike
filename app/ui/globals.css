@@ -25,6 +25,9 @@ body {
     )
     rgb(var(--background-start-rgb));
 }
+.range-input {
+  @apply w-full h-2  cursor-pointer accent-[#2BD268];
+}
 
 @layer utilities {
   .text-balance {

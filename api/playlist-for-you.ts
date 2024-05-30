@@ -23,5 +23,6 @@ export async function likePlaylistForYou(id: string) {
     method: 'PUT',
   };
   const res = await fetch(`https://interview-ldfz.onrender.com/like-playlist-for-you/${id}`, requestOptions)
+  console.log(res)
   return res
 }
